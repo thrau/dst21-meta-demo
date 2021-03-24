@@ -3,6 +3,8 @@ package meta.demo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import javax.ws.rs.Path;
 
@@ -61,6 +63,20 @@ public class ReflectTest {
         // getUser
         //  @Path: /user/{username}
         //   - arg0 : java.lang.String
+    }
+
+    @Test
+    public void testInspectReturnTypes() throws Exception {
+        // UserDirectory.getUser(String) returns a User.class
+        Method getUserMethod = UserDirectory.class.getMethod("getUser", String.class);
+        Assert.assertEquals(getUserMethod.getReturnType(), User.class);
+
+        // returns a List<User>, which is a ParameterizedType with 1 type argument (User)
+        Method findUsersMethod = UserDirectory.class.getMethod("findUser", String.class, String.class, String.class);
+        ParameterizedType parameterizedReturnType = (ParameterizedType) findUsersMethod.getGenericReturnType();
+        Type[] typeArguments = parameterizedReturnType.getActualTypeArguments();
+        Assert.assertEquals(1, typeArguments.length);
+        Assert.assertEquals(typeArguments[0], User.class);
     }
 
     @Test
