@@ -22,6 +22,14 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
+
+    // jax-rs api
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
+    // jax-rs implementation (for utils)
+    implementation 'org.glassfish.jersey.core:jersey-common:2.22.2'
+
+    // for json decoding
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
 }
 
 application {
