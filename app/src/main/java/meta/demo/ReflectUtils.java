@@ -4,19 +4,29 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 
 public class ReflectUtils {
+    /**
+     * Reflection based equals method.
+     *
+     * @param that  an object
+     * @param other the object to compare to
+     * @return true if the objects are equal
+     */
     public static boolean reflectEquals(Object that, Object other) {
         if (other == null || that.getClass() != other.getClass()) {
             return false;
         }
 
-        Field[] thisFields = that.getClass().getDeclaredFields();
+        Field[] fields = that.getClass().getDeclaredFields();
 
-        for (int i = 0; i < thisFields.length; i++) {
-            Object fieldValueThis = null;
-            Object fieldValueOther = null;
+        for (Field field : fields) {
+            field.setAccessible(true); // access private fields
+
+            Object fieldValueThis;
+            Object fieldValueOther;
+
             try {
-                fieldValueThis = thisFields[i].get(that);
-                fieldValueOther = thisFields[i].get(other);
+                fieldValueThis = field.get(that);
+                fieldValueOther = field.get(other);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
