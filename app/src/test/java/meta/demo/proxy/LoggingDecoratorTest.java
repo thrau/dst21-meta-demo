@@ -1,11 +1,10 @@
 package meta.demo.proxy;
 
-import static org.junit.Assert.*;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import meta.demo.api.User;
@@ -17,36 +16,35 @@ public class LoggingDecoratorTest {
 
         @Override
         public void addUser(User user) {
-
+            System.out.println("calling addUser on DummyDirectory");
         }
 
         @Override
         public User getUser(String username) {
-            System.out.println("calling dummy directory");
+            System.out.println("calling getUser on DummyDirectory");
             return null;
         }
 
         @Override
         public List<User> findUser(String email, String firstName, String lastName) {
+            System.out.println("calling findUser on DummyDirectory");
             return null;
         }
     }
 
     @Test
-    public void test() throws Exception {
+    public void testDecorator() throws Exception {
         UserDirectory delegate = new DummyDirectory();
-
         UserDirectory directory = new LoggingDecorator(delegate);
 
         directory.getUser("foobar");
+        // should output in stdout:
+        // calling getUser(foobar)
+        // calling getUser on DummyDirectory
     }
 
     @Test
     public void testProxy() throws Exception {
-
-        applicationContext.getTheMagicObject(UserDirectory.class)
-
-
         ClassLoader loader = this.getClass().getClassLoader();
 
         Class<?>[] interfaces = {UserDirectory.class};
@@ -54,9 +52,12 @@ public class LoggingDecoratorTest {
 
         Object proxy = Proxy.newProxyInstance(loader, interfaces, handler);
         System.out.println(proxy.getClass());
-        System.out.println(proxy instanceof UserDirectory);
+        Assert.assertTrue(proxy instanceof UserDirectory);
 
         UserDirectory directory = (UserDirectory) proxy;
         directory.getUser("foobar");
+        // should output:
+        // calling getUser(foobar)
+        // calling getUser on DummyDirectory
     }
 }
