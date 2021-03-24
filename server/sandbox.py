@@ -1,3 +1,6 @@
+from server.app import User
+
+
 class MyClass:
 
     def __init__(self) -> None:
@@ -31,6 +34,21 @@ def combine(a, b, c):
 
 
 def main():
+    # print the type annotations of User
+    # {'username': <class 'str'>, 'email': <class 'str'>, 'firstName': <class 'str'>, 'lastName': <class 'str'>}
+    print(User.__annotations__)
+
+    try:
+        MyClass.__annotations__
+    except AttributeError:
+        # OK: MyClass has no type annotations
+        pass
+
+    # reflectively get object properties key-value pairs
+    user = User("arthur", "arthur@earth.planet", "Arthur", "Dent")
+    for k, v in user.__dict__.items():
+        print(f' {k}: {v}')
+
     print("2: call main")
     print(get_my_name("!"))
     print(get_my_name("!"))
