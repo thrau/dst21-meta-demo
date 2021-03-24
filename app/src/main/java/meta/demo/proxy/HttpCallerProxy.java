@@ -1,38 +1,42 @@
-package meta.demo.http;
+package meta.demo.proxy;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import meta.demo.api.User;
-import meta.demo.api.UserDirectory;
-
-public class HttpUserDirectory implements UserDirectory {
+public class HttpCallerProxy implements InvocationHandler  {
 
     private HttpClient client;
-
-    public HttpUserDirectory() {
-        client = HttpClient.newHttpClient();
-    }
+    private String root = "http://localhost:5000";
 
     @Override
-    public void addUser(User user) {
+    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
 
+        Path annotation = method.getAnnotation(Path.class);
+
+        String pathValue = annotation.value();
+        String uri = this.root + pathValue;
+
+        GET annotation1 = method.getAnnotation(GET.class);
+        if(annotation1 == null) {
+
+        }
+
+        Class<?> returnType = method.getReturnType();
+
+
+
+        return getJson(URI.create(uri), returnType);
     }
-
-    @Override
-    public User getUser(String username) {
-        URI uri = URI.create("http://localhost:5000/user/" + username);
-        Class<User> valueType = User.class;
-
-        return (User) getJson(uri, valueType);
-    }
-
 
     public Object getJson(URI uri, Class<?> valueType) {
         HttpRequest request = HttpRequest.newBuilder()
@@ -54,10 +58,5 @@ public class HttpUserDirectory implements UserDirectory {
             throw new RuntimeException(e);
         }
 
-    }
-
-    @Override
-    public List<User> findUser(String email, String firstName, String lastName) {
-        return null;
     }
 }

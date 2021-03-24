@@ -2,6 +2,9 @@ package meta.demo.api;
 
 import java.util.Objects;
 
+
+import meta.demo.ReflectUtils;
+
 public class User {
 
     private String username;
@@ -60,10 +63,7 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(username, user.username) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName);
+        return Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName);
     }
 
     @Override
