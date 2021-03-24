@@ -56,6 +56,7 @@ public class HttpUserDirectory implements UserDirectory {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String body = response.body();
+            System.out.println("POST response:" + body);
 
             if(response.statusCode() != 201) {
                 throw new RuntimeException("error creating object");
