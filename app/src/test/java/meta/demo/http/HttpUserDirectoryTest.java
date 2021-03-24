@@ -41,6 +41,7 @@ public class HttpUserDirectoryTest {
     @Test
     public void addUser() throws Exception {
         UserDirectory dir = new HttpUserDirectory();
+        Assert.assertNull("user was already added, restart the server?", dir.getUser("foobar"));
 
         User u1 = new User();
         u1.setUsername("foobar");

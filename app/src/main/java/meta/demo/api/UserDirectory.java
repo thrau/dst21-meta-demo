@@ -10,8 +10,8 @@ import javax.ws.rs.QueryParam;
 
 public interface UserDirectory {
 
-    @Path("/user")
     @POST
+    @Path("/user")
     void addUser(User user);
 
     @GET
